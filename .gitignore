@@ -1,6 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+
+# DEPENDENCIES
 /node_modules
 /.pnp
 .pnp.*
@@ -10,32 +11,49 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
+
+
+# TESTING
 /coverage
 
-# next.js
+
+
+# NEXT.JS
 /.next/
 /out/
+build/
+.vercel/
 
-# production
-/build
 
-# misc
-.DS_Store
-*.pem
 
-# debug
+# TYPESCRIPT
+*.tsbuildinfo
+next-env.d.ts
+
+
+
+# ENV FILES (SECRETS)
+.env
+.env.*
+.env*.local
+
+
+# DRIZZLE ORM
+drizzle.meta/
+
+# DATABASE (LOCAL DEV)
+*.db
+*.sqlite
+*.sqlite3
+
+# DEBUG LOGS
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
 
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# MISC / OS
+.DS_Store
+Thumbs.db
+*.pem
