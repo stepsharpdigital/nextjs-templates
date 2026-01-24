@@ -25,6 +25,7 @@ import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 
+// Zod schema for form validation
 const formSchema = z.object({
   email: z.email({ message: "Please enter a valid email address" }),
 });
@@ -35,6 +36,7 @@ export function ForgotPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: "onSubmit",
@@ -44,15 +46,15 @@ export function ForgotPasswordForm({
   });
 
   async function onSubmit(value: FormData) {
-    const { error } = await authClient.requestPasswordReset({
+    const { error } = await authClient.requestPasswordReset({ // call requestPasswordReset function with form data
       email: value.email,
-      redirectTo: "/reset-password",
+      redirectTo: "/reset-password", // Redirect URL after password reset
     });
 
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success("Password reset email sent!");
+      toast.success("Password reset email sent!"); // Notify user of success
     }
   }
 

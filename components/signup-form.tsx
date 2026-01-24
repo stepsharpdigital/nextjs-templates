@@ -26,13 +26,14 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
+// Zod schema for form validation
 const formSchema = z.object({
   username: z
     .string()
     .min(2, { message: "Name must be at least 2 characters" })
     .max(50, { message: "Name is too long" })
     .trim(),
-  email: z.email({ message: "Please enter a valid email address" }),
+  email: z.email({ message: "Please enter a valid email address" }), //email validation latest one, z.string().email is deprecated
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" })
@@ -46,16 +47,18 @@ const formSchema = z.object({
     .regex(/[0-9]/, { message: "Password must contain at least one number" }),
 });
 
+// Infer the form data type from the schema
 type FormData = z.infer<typeof formSchema>;
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
   const router = useRouter();
 
   const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema), // Integrate Zod with react-hook-form
     mode: "onSubmit",
     defaultValues: {
       username: "",
@@ -64,16 +67,16 @@ export function SignupForm({
     },
   });
 
-  async function onSubmit(data: FormData) {
-    console.log("Submitting form data:", data);
-    const { success, message } = await signUp(
+  async function onSubmit(data: FormData) { // Handle form submission 
+    console.log("Submitting form data:", data); 
+    const { success, message } = await signUp( // Call signUp function with form data
       data.username,
       data.email,
       data.password,
     );
     if (success) {
       toast.success(message as string);
-      router.push("/login");
+      router.push("/login"); // Redirect to login page on success
     } else {
       toast.error(message as string);
     }

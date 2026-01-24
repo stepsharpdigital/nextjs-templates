@@ -12,13 +12,14 @@ import {
   Tailwind,
 } from "@react-email/components";
 
+// Define the props for the email component
 interface ForgetPasswordEmailProps {
   username: string;
   resetUrl: string;
 }
 
 const ForgotPasswordEmail = (props: ForgetPasswordEmailProps) => {
-  const { username, resetUrl } = props;
+  const { username, resetUrl } = props; // Destructure props
 
   return (
     <Html lang="en" dir="ltr">

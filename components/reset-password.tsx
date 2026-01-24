@@ -27,6 +27,7 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense } from "react";
 
+// Define the schema for form validation using Zod
 const formSchema = z.object({
   password: z
     .string()
@@ -58,12 +59,13 @@ function ResetPasswordFormContent({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") as string;
 
   const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema), 
     mode: "onSubmit",
     defaultValues: {
       password: "",
@@ -71,18 +73,18 @@ function ResetPasswordFormContent({
     },
   });
 
-  async function onSubmit(value: FormData) {
-    if (value.password !== value.confirmPassword) {
-      toast.error("Passwords do not match!");
+  async function onSubmit(value: FormData) { 
+    if (value.password !== value.confirmPassword) { // Check if passwords match
+      toast.error("Passwords do not match!"); 
       return;
     }
 
-    if (!token) {
-      toast.error("Reset token is missing or invalid");
+    if (!token) { // Check if token is present
+      toast.error("Reset token is missing or invalid"); //throw error if token is absent or invalid
       return;
     }
 
-    const { error } = await authClient.resetPassword({
+    const { error } = await authClient.resetPassword({ // call resetPassword function with form data and token
       newPassword: value.password,
       token: token,
     });
@@ -91,7 +93,7 @@ function ResetPasswordFormContent({
       toast.error(error.message);
     } else {
       toast.success("Password has been reset successfully!");
-      router.push("/login");
+      router.push("/login"); // Redirect to login page on success
     }
   }
 
@@ -196,7 +198,7 @@ export function ResetPasswordForm({
   ...props
 }: React.ComponentProps<"div">) {
   return (
-    <Suspense
+    <Suspense   // added suspense for better loading state management
       fallback={
         <div className={cn("flex flex-col gap-6", className)} {...props}>
           <Card>

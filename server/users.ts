@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 
 export const signIn = async (email: string, password: string) => {
   try {
-    await auth.api.signInEmail({
+    await auth.api.signInEmail({ // Call the sign-in API with email and password
       body: {
         email,
         password,
@@ -17,7 +17,7 @@ export const signIn = async (email: string, password: string) => {
     const e = err as Error;
    
     const errorMessage = e.message.toLowerCase();
-    
+    // Check for common error messages and provide user-friendly feedback
     if (errorMessage.includes("invalid") || 
         errorMessage.includes("credentials") || 
         errorMessage.includes("password") ||
@@ -38,7 +38,7 @@ export const signIn = async (email: string, password: string) => {
 
 export const signUp = async (username: string, email: string, password: string) => {
   try{
-    await auth.api.signUpEmail({
+    await auth.api.signUpEmail({ // Call the sign-up API with email, password, and username
       body: {
         email,
         password,
@@ -53,7 +53,8 @@ export const signUp = async (username: string, email: string, password: string) 
      const e = err as Error;
      const errorMessage = e.message.toLowerCase();
      
-
+  // Check for common error messages and provide user-friendly feedback 
+  
      if (errorMessage.includes("already exists") || 
          errorMessage.includes("duplicate") || 
          errorMessage.includes("already registered") ||
