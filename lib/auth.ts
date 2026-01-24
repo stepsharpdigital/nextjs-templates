@@ -1,34 +1,40 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/db/drizzle"; 
+import { db } from "@/db/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { schema } from "@/db/schema";
-import {Resend} from "resend";
+import { Resend } from "resend";
 import ForgotPasswordEmail from "@/app/emails/reset-password";
 
-const resend  = new Resend(process.env.RESEND_API_KEY as string);
+const resend = new Resend(process.env.RESEND_API_KEY as string);
+const RESEND_EMAIL_FROM =
+  (process.env.RESEND_EMAIL as string) || "onboarding@resend.dev";
 
+// Initialize Better Auth instance with Drizzle Adapter and Next.js cookies
 export const auth = betterAuth({
-   socialProviders: {
-        google: { 
-            clientId: process.env.GOOGLE_CLIENT_ID as string, 
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string, 
-        }, 
-      },
-     emailAndPassword: { 
-    enabled: true,
-      sendResetPassword: async ({user, url}) => {
-      resend.emails.send({
-        from:"onboarding@resend.dev",
-        to: user.email,
-        subject: "Reset Your Password",
-        react: ForgotPasswordEmail({username: user.name, resetUrl:url})
-      })
+  socialProviders: {
+    google: {
+      //Google OAuth provider configuration
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
-    database: drizzleAdapter(db, {
-        provider: "pg",
-        schema, 
-    }),
-    plugins: [nextCookies()] 
+  emailAndPassword: {
+    //Enable email and password authentication
+    enabled: true,
+    sendResetPassword: async ({ user, url }) => {
+      //Function to send password reset email
+      resend.emails.send({
+        from: RESEND_EMAIL_FROM,
+        to: user.email,
+        subject: "Reset Your Password",
+        react: ForgotPasswordEmail({ username: user.name, resetUrl: url }), //Using React component for email content
+      });
+    },
+  },
+  database: drizzleAdapter(db, {  // db is our Drizzle instance
+    provider: "pg", //Postgre
+    schema, // our database schema
+  }),
+  plugins: [nextCookies()],
 });

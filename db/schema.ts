@@ -93,3 +93,4 @@ export const accountRelations = relations(account, ({ one }) => ({
 }));
 
 export const schema = { user, session, account, verification};
+// export schema object that includes all defined tables

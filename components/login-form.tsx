@@ -28,23 +28,25 @@ import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 
+// Zod schema for form validation
 const formSchema = z.object({
   email: z.email({ message: "Please enter a valid email address" }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" }),
 });
-
+// Infer the form data type from the schema
 type FormData = z.infer<typeof formSchema>;
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
   const router = useRouter();
 
   const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema), // Integrate Zod with react-hook-form
     mode: "onSubmit",
     defaultValues: {
       email: "",
@@ -52,18 +54,18 @@ export function LoginForm({
     },
   });
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = async () => { // OAuth sign-in with Google
     await authClient.signIn.social({
       provider: "google",
       callbackURL: "/dashboard",
     });
   };
 
-  async function onSubmit(data: FormData) {
-    const { success, message } = await signIn(data.email, data.password);
+  async function onSubmit(data: FormData) { // Handle form submission
+    const { success, message } = await signIn(data.email, data.password); // Call signIn function with form data
     if (success) {
       toast.success(message as string);
-      router.push("/dashboard");
+      router.push("/dashboard"); // Redirect to dashboard on success
     } else {
       toast.error(message as string);
     }
