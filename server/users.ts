@@ -47,7 +47,7 @@ export const signUp = async (username: string, email: string, password: string) 
     });
     return{
       success: true,
-      message: "Account created successfully. Please check your email to verify your account."
+      message: "Account created successfully."
     }
   } catch(err){
      const e = err as Error;
