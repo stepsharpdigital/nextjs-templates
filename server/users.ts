@@ -1,5 +1,39 @@
 "use server";
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { db } from "@/db/drizzle";
+import { eq } from "drizzle-orm";
+import { user } from "@/db/schema";
+
+
+export const getCurrentUser = async ()=>{
+       const session = await auth.api.getSession({
+             headers: await headers(),
+        });
+
+        if (!session){
+            redirect("/login");
+        }
+
+       const currentUser = await db.query.user.findFirst({
+          where: eq(
+            user.id,
+            session.user.id
+          ),
+       });
+
+       if (!currentUser){
+            redirect("/login");
+       }
+
+       return {
+        ...session,
+        currentUser
+       }
+}
+
+
 
 export const signIn = async (email: string, password: string) => {
   try {
@@ -47,7 +81,7 @@ export const signUp = async (username: string, email: string, password: string) 
     });
     return{
       success: true,
-      message: "Account created successfully. Please check your email to verify your account."
+      message: "Account created successfully."
     }
   } catch(err){
      const e = err as Error;

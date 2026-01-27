@@ -5,6 +5,9 @@ import { nextCookies } from "better-auth/next-js";
 import { schema } from "@/db/schema";
 import { Resend } from "resend";
 import ForgotPasswordEmail from "@/app/emails/reset-password";
+import { organization } from "better-auth/plugins"
+import { getInitialOrganization } from "@/server/organizations";
+
 
 const resend = new Resend(process.env.RESEND_API_KEY as string);
 const RESEND_EMAIL_FROM =
@@ -32,9 +35,28 @@ export const auth = betterAuth({
       });
     },
   },
+  databaseHooks: {
+    session: {
+      create: {
+        before: async (session) => {
+          // Implement your custom logic to set initial active organization
+          const organization = await getInitialOrganization(session.userId);
+          return {
+            data: {
+              ...session,
+              activeOrganizationId: organization?.id,
+            },
+          };
+        },
+      },
+    },
+  },
   database: drizzleAdapter(db, {  // db is our Drizzle instance
     provider: "pg", //Postgre
     schema, // our database schema
   }),
-  plugins: [nextCookies()],
+  plugins: [
+    organization(),
+    nextCookies()
+    ],
 });

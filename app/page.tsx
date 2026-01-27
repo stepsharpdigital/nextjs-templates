@@ -33,13 +33,15 @@ export default function HomePage() {
             <span className="text-xl font-bold">Stepsharp</span>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/login">
-              <Button variant="ghost" size="sm">
-                Sign In
+            <Link href="/dashboard">
+              <Button  size="sm" >
+               Dashboard
               </Button>
             </Link>
-            <Link href="/signup">
-              <Button size="sm">Get Started</Button>
+            <Link href="/login">
+              <Button variant="outline" size="sm">
+                Sign In
+              </Button>
             </Link>
           </div>
         </div>
@@ -54,7 +56,7 @@ export default function HomePage() {
           </div>
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
             Build the Future with{" "}
-            <span className="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className=" text-black">
               Stepsharp
             </span>
           </h1>
