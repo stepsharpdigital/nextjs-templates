@@ -31,9 +31,7 @@ import Link from "next/link";
 // Zod schema for form validation
 const formSchema = z.object({
   email: z.email({ message: "Please enter a valid email address" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" }),
+  password: z.string().nonempty({ message: "Password is required" }),
 });
 // Infer the form data type from the schema
 type FormData = z.infer<typeof formSchema>;
