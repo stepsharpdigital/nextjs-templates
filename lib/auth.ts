@@ -36,5 +36,10 @@ export const auth = betterAuth({
     provider: "pg", //Postgre
     schema, // our database schema
   }),
+  advanced:{
+    database: {
+      generateId: "uuid"
+    }
+  },
   plugins: [nextCookies()],
 });
