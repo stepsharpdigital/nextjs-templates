@@ -23,27 +23,24 @@ import {
 import { Input } from "@/components/ui/input";
 import { signIn } from "@/server/users";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-
 // Zod schema for form validation
 const formSchema = z.object({
   email: z.email({ message: "Please enter a valid email address" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" }),
+  password: z.string().nonempty({ message: "Password is required" }),
 });
 // Infer the form data type from the schema
 type FormData = z.infer<typeof formSchema>;
-
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const invite = searchParams.get("invite");
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema), // Integrate Zod with react-hook-form
@@ -54,17 +51,28 @@ export function LoginForm({
     },
   });
 
-  const signInWithGoogle = async () => { // OAuth sign-in with Google
+  const signInWithGoogle = async () => {
+    // OAuth sign-in with Google
     await authClient.signIn.social({
       provider: "google",
       callbackURL: "/dashboard",
     });
   };
 
-  async function onSubmit(data: FormData) { // Handle form submission
+  async function onSubmit(data: FormData) {
+    // Handle form submission
     const { success, message } = await signIn(data.email, data.password); // Call signIn function with form data
     if (success) {
       toast.success(message as string);
+      if (invite) {
+        const response = await fetch(`/api/accept-invitation/${invite}`);
+        const result = await response.json();
+        if (!response.ok) {
+          toast.error(result.message || "Failed to accept invite");
+        } else {
+          toast.success(result.message || "Invite accepted successfully");
+        }
+      }
       router.push("/dashboard"); // Redirect to dashboard on success
     } else {
       toast.error(message as string);
@@ -173,7 +181,10 @@ export function LoginForm({
                 </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?{" "}
-                  <Link href="/signup">Sign up</Link>
+                  <Link href={invite ? `/signup?invite=${invite}` : "/signup"}>
+                    Sign up
+                  </Link>
+                  :
                 </FieldDescription>
               </Field>
             </FieldGroup>

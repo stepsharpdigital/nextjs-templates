@@ -4,7 +4,6 @@ import * as React from "react"
 import {
   IconCamera,
   IconChartBar,
-  IconDashboard,
   IconDatabase,
   IconFileAi,
   IconFileDescription,
@@ -32,19 +31,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { useCurrentUser } from "@/hooks/useCurrent-user"
+import { Skeleton } from "@/components/ui/skeleton" 
 
-const data = {
-  user: {
-    name: "Stepsharp",
-    email: "@stepsharp.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
+const navData = {
   navMain: [
-    {
-      title: "Dashboard",
-      url: "#",
-      icon: IconDashboard,
-    },
     {
       title: "Organizations",
       url: "/org",
@@ -151,6 +142,47 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user, loading } = useCurrentUser()
+
+  if (loading) {
+    return (
+      <Sidebar collapsible="offcanvas" {...props}>
+        <SidebarHeader>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                className="data-[slot=sidebar-menu-button]:p-1.5!"
+              >
+                <a href="#">
+                  <IconInnerShadowTop className="size-5!" />
+                  <span className="text-base font-semibold">Stepsharp</span>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarHeader>
+        <SidebarContent>
+          <NavMain items={navData.navMain} />
+          <NavDocuments items={navData.documents} />
+          <NavSecondary items={navData.navSecondary} className="mt-auto" />
+        </SidebarContent>
+        <SidebarFooter>
+          <div className="flex items-center gap-3 px-2 py-3">
+            <Skeleton className="h-8 w-8 rounded-lg" />
+            <div className="space-y-2">
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-2 w-32" />
+            </div>
+          </div>
+        </SidebarFooter>
+      </Sidebar>
+    )
+  }
+
+
+  const userData = user || { name: "Guest", email: "" }
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -169,12 +201,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={navData.navMain} />
+        <NavDocuments items={navData.documents} />
+        <NavSecondary items={navData.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={userData} />
       </SidebarFooter>
     </Sidebar>
   )

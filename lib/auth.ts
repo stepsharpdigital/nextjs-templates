@@ -7,8 +7,8 @@ import { Resend } from "resend";
 import ForgotPasswordEmail from "@/app/emails/reset-password";
 import { organization } from "better-auth/plugins"
 import { getInitialOrganization } from "@/server/organizations";
-
-
+import {ac, admin, member, owner} from "@/lib/auth/permissions"
+import OrganizationInvitationEmail from "@/app/emails/org-invitation";
 const resend = new Resend(process.env.RESEND_API_KEY as string);
 const RESEND_EMAIL_FROM =
   (process.env.RESEND_EMAIL as string) || "onboarding@resend.dev";
@@ -54,9 +54,40 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {  // db is our Drizzle instance
     provider: "pg", //Postgre
     schema, // our database schema
-  }),
+  },
+),
+  advanced:{
+     database: {
+      generateId: "uuid"
+  }
+},
   plugins: [
-    organization(),
+    organization({
+        async sendInvitationEmail(data) {
+        const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/api/accept-invitation/${data.id}`;
+        
+        resend.emails.send({
+          from: `${process.env.EMAIL_SENDER_NAME} <${process.env.EMAIL_SENDER_ADDRESS}>`,
+          to: data.email,
+          subject: "You've been invited to join our organization",
+          react: OrganizationInvitationEmail
+          ({
+            email: data.email,
+            invitedByUsername: data.inviter.user.name,
+            invitedByEmail: data.inviter.user.email,
+            teamName: data.organization.name,
+            inviteLink,
+          })
+        })
+      },
+      ac,
+      roles: {
+        owner,
+        admin,
+        member,
+      }
+    }
+  ),
     nextCookies()
     ],
 });

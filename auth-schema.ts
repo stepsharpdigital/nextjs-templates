@@ -7,8 +7,8 @@ import {
   uuid,
   index,
   uniqueIndex,
-  pgEnum,
 } from "drizzle-orm/pg-core";
+
 export const user = pgTable("user", {
   id: uuid("id")
     .default(sql`pg_catalog.gen_random_uuid()`)
@@ -126,9 +126,6 @@ export const member = pgTable(
   ],
 );
 
-export const role = pgEnum("role", ["owner", "admin", "member"]);
-export type Role = (typeof role.enumValues)[number];
-
 export const invitation = pgTable(
   "invitation",
   {
@@ -200,26 +197,3 @@ export const invitationRelations = relations(invitation, ({ one }) => ({
     references: [user.id],
   }),
 }));
-
-export type User = typeof user.$inferSelect;
-// export type NewUser = typeof user.$inferInsert;
-// export type Session = typeof session.$inferSelect;
-// export type NewSession = typeof session.$inferInsert;
-// export type Account = typeof account.$inferSelect;
-// export type NewAccount = typeof account.$inferInsert;
-// export type Verification = typeof verification.$inferSelect;
-// export type NewVerification = typeof verification.$inferInsert;
-export type Organization = typeof organization.$inferSelect;
-// export type NewOrganization = typeof organization.$inferInsert;
-export type Member = typeof member.$inferSelect &{
-   user: typeof user.$inferSelect;
-};
-// export type NewMember = typeof member.$inferInsert;
-// export type Invitation = typeof invitation.$inferSelect;
-// export type NewInvitation = typeof invitation.$inferInsert;
-
-
-export const schema = { session, account, verification,user ,organization, member, invitation,
-  userRelations, sessionRelations, accountRelations, organizationRelations, memberRelations, invitationRelations
- };
-// export schema object that includes all defined tables

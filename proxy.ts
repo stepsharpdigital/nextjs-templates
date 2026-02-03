@@ -17,6 +17,6 @@ export async function proxy(request: NextRequest) {
 // Apply this middleware/proxy to all routes except for the specified ones
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|login|signup|forgot-password|reset-password|org).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|login|signup|forgot-password|reset-password).*)",
   ],
 };

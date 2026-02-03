@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { signUp } from "@/server/users";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
@@ -56,6 +56,8 @@ export function SignupForm({
 }: React.ComponentProps<"div">) {
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const invite = searchParams.get("invite");
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema), // Integrate Zod with react-hook-form
@@ -76,7 +78,14 @@ export function SignupForm({
     );
     if (success) {
       toast.success(message as string);
-      router.push("/login"); // Redirect to login page on success
+      if(invite){
+        router.push(`/login?invite=${invite}`);
+         //if there is invitation id too we will pass that with the redirection
+         //  so that the user can auto accept the invitation upon login
+      }
+      else{
+        router.push("/login"); // Redirect to login page on success
+      }
     } else {
       toast.error(message as string);
     }
