@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-import { Brain, Code, Palette, ArrowRight, Sparkles,  } from "lucide-react";
+import { Brain, Code, Palette, ArrowRight, Sparkles, ArrowLeft,  } from "lucide-react";
 export default function HomePage() {
   const features = [
     {
@@ -33,6 +33,11 @@ export default function HomePage() {
             <span className="text-xl font-bold">Stepsharp</span>
           </div>
           <div className="flex items-center gap-4">
+            <Link href="/dashboard">
+              <Button size="lg" className="px-8">
+                <ArrowLeft className="mr-2 h-4 w-4" /> Dashboard 
+              </Button>
+            </Link>
             <Link href="/login">
               <Button variant="ghost" size="sm">
                 Sign In
@@ -54,7 +59,7 @@ export default function HomePage() {
           </div>
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
             Build the Future with{" "}
-            <span className="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-black dark:text-white">
               Stepsharp
             </span>
           </h1>
@@ -89,7 +94,7 @@ export default function HomePage() {
               <Card key={index} className="text-center">
                 <CardContent className="pt-6">
                   <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/20">
-                    <div className="text-blue-600 dark:text-blue-400">{feature.icon}</div>
+                    <div className="text-gray-600 dark:text-gray-400">{feature.icon}</div>
                   </div>
                   <h3 className="text-lg font-semibold">{feature.title}</h3>
                   <p className="mt-2 text-sm text-muted-foreground">{feature.description}</p>

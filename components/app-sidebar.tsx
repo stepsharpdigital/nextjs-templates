@@ -3,7 +3,7 @@
 import * as React from "react"
 import {
   IconCamera,
-  IconChartBar,
+  IconCash,
   IconDashboard,
   IconDatabase,
   IconFileAi,
@@ -12,7 +12,6 @@ import {
   IconFolder,
   IconHelp,
   IconInnerShadowTop,
-  IconListDetails,
   IconReport,
   IconSearch,
   IconSettings,
@@ -43,14 +42,9 @@ const navData = {
       icon: IconDashboard,
     },
     {
-      title: "Organizations",
-      url: "/org",
-      icon: IconListDetails,
-    },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: IconChartBar,
+      title: "Billing",
+      url: "/billing",
+      icon: IconCash,
     },
     {
       title: "Projects",
