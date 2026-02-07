@@ -27,20 +27,24 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
+import { Suspense } from "react";
+
 // Zod schema for form validation
 const formSchema = z.object({
   email: z.email({ message: "Please enter a valid email address" }),
   password: z.string().nonempty({ message: "Password is required" }),
 });
+
 // Infer the form data type from the schema
 type FormData = z.infer<typeof formSchema>;
-export function LoginForm({
+
+// Inner component that uses useSearchParams
+function LoginFormContent({
   className,
+  invite,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div"> & { invite?: string | null }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const invite = searchParams.get("invite");
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema), // Integrate Zod with react-hook-form
@@ -203,5 +207,41 @@ export function LoginForm({
         .
       </FieldDescription>
     </div>
+  );
+}
+
+export function LoginForm({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <Suspense fallback={
+      <div className={cn("flex flex-col gap-6", className)} {...props}>
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl">Welcome back</CardTitle>
+            <CardDescription>Loading...</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    }>
+      <LoginFormWithSearchParams className={className} {...props} />
+    </Suspense>
+  );
+}
+
+function LoginFormWithSearchParams({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  const searchParams = useSearchParams();
+  const invite = searchParams.get("invite");
+  
+  return (
+    <LoginFormContent 
+      className={className} 
+      invite={invite} 
+      {...props} 
+    />
   );
 }

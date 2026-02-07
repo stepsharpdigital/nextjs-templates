@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 
 // Zod schema for form validation
 const formSchema = z.object({
@@ -50,14 +51,14 @@ const formSchema = z.object({
 // Infer the form data type from the schema
 type FormData = z.infer<typeof formSchema>;
 
-export function SignupForm({
+// Inner component that uses the invite prop
+function SignupFormContent({
   className,
+  invite,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div"> & { invite?: string | null }) {
 
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const invite = searchParams.get("invite");
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema), // Integrate Zod with react-hook-form
@@ -70,7 +71,7 @@ export function SignupForm({
   });
 
   async function onSubmit(data: FormData) { // Handle form submission 
-    console.log("Submitting form data:", data); 
+    // console.log("Submitting form data:", data); 
     const { success, message } = await signUp( // Call signUp function with form data
       data.username,
       data.email,
@@ -205,5 +206,43 @@ export function SignupForm({
         .
       </FieldDescription>
     </div>
+  );
+}
+
+export function SignupForm({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <Suspense fallback={
+      <div className={cn("flex flex-col gap-6", className)} {...props}>
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl">Create your account</CardTitle>
+            <CardDescription>
+              Loading...
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    }>
+      <SignupFormWithSearchParams className={className} {...props} />
+    </Suspense>
+  );
+}
+
+function SignupFormWithSearchParams({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  const searchParams = useSearchParams();
+  const invite = searchParams.get("invite");
+  
+  return (
+    <SignupFormContent 
+      className={className} 
+      invite={invite} 
+      {...props} 
+    />
   );
 }

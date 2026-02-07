@@ -7,11 +7,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Building, Check, X } from "lucide-react"
 import { toast } from "sonner"
+import { Suspense } from "react"
 
-export default function AcceptInvitePage() {
+function AcceptInviteContent({
+  token,
+}: {
+  token: string | null
+}) {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const token = searchParams.get("token")
   const [isLoading, setIsLoading] = React.useState(false)
 
   // Mock organization data
@@ -110,5 +113,43 @@ export default function AcceptInvitePage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+function AcceptInviteWithSearchParams() {
+  const searchParams = useSearchParams()
+  const token = searchParams.get("token")
+  
+  return <AcceptInviteContent token={token} />
+}
+
+export default function AcceptInvitePage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto p-6 max-w-md min-h-screen flex items-center justify-center">
+        <Card className="w-full">
+          <CardHeader className="text-center">
+            <div className="mx-auto mb-4">
+              <Avatar className="h-16 w-16 mx-auto">
+                <AvatarFallback>
+                  <Building className="h-8 w-8" />
+                </AvatarFallback>
+              </Avatar>
+            </div>
+            <CardTitle>Organization Invitation</CardTitle>
+            <CardDescription>
+              Loading invitation...
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="text-center">
+              <p className="text-muted-foreground">Please wait while we load the invitation details...</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    }>
+      <AcceptInviteWithSearchParams />
+    </Suspense>
   )
 }
