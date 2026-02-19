@@ -27,25 +27,22 @@ export async function GET(
     .where(eq(invitation.id, invitationId));
 
   if (inv.length === 0) {
-    return NextResponse.json(
-      { message: "Invitation not found" },
-      { status: 404 },
-    );
+      return NextResponse.redirect(
+        new URL("/org?error=invitation_not_found", request.url),
+      );
   }
 
   if (inv[0].status === "accepted"){
-    return NextResponse.json(
-      { message: "Invitation already accepted" },
-      { status: 400 },
-    );
+   return NextResponse.redirect(
+        new URL("/org?error=already_accepted", request.url),
+      );
   }
   const invitedEmail = inv[0].email;
 
   if (session.user.email.toLowerCase() !== invitedEmail.toLowerCase()) {
-    return NextResponse.json(
-      { message: "Invitation is not for you" },
-      { status: 401 },
-    );
+    return NextResponse.redirect(
+        new URL("/org?error=not_for_you", request.url),
+      );
   }
 
   try {
@@ -55,7 +52,9 @@ export async function GET(
       },
       headers: await headers(),
     });
-    return NextResponse.json({ message: "Invitation accepted" }, { status: 200 });
+     return NextResponse.redirect(
+      new URL("/org?success=invite_accepted", request.url),
+    );
   } catch (err) {
     console.error(err);
     return NextResponse.json(
