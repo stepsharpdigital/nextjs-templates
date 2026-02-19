@@ -63,25 +63,19 @@ function LoginFormContent({
     });
   };
 
-  async function onSubmit(data: FormData) {
-    // Handle form submission
-    const { success, message } = await signIn(data.email, data.password); // Call signIn function with form data
-    if (success) {
-      toast.success(message as string);
-      if (invite) {
-        const response = await fetch(`/api/accept-invitation/${invite}`);
-        const result = await response.json();
-        if (!response.ok) {
-          toast.error(result.message || "Failed to accept invite");
-        } else {
-          toast.success(result.message || "Invite accepted successfully");
-        }
-      }
-      router.push("/dashboard"); // Redirect to dashboard on success
+async function onSubmit(data: FormData) {
+  const { success, message } = await signIn(data.email, data.password);
+  if (success) {
+    toast.success(message);
+    if (invite) {
+      router.push(`/api/accept-invitation/${invite}`);
     } else {
-      toast.error(message as string);
+      router.push('/dashboard');
     }
+  } else {
+    toast.error(message);
   }
+}
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>

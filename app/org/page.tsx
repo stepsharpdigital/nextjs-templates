@@ -1,9 +1,13 @@
 "use client";
+
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from "react";
+import { toast } from "sonner";
 import {
   Card,
   CardContent,
@@ -26,6 +30,8 @@ import {
 import { OrganizationSwitcher } from "@/components/organization/org-switcher";
 import { authClient } from "@/lib/auth-client";
 import { getOrganizationSubscriptionDetailsClient } from "@/lib/stripe/subs";
+import { Suspense } from "react";
+
 interface OrganizationSwitcherOrg {
   id: string;
   name: string;
@@ -35,9 +41,11 @@ interface OrganizationSwitcherOrg {
   metadata: string | null;
 }
 
-export default function OrganizationsPage() {
+// Inner component that uses useSearchParams and all other hooks
+function OrganizationsPageContent() {
   const router = useRouter();
-  
+  const searchParams = useSearchParams();
+
   // Get active organization with full data
   const { 
     data: activeOrganization, 
@@ -121,6 +129,29 @@ export default function OrganizationsPage() {
     if (!activeOrganization || !hasActiveSubscription) return;
     router.push(`/org/${activeOrganization.slug}/subs`);
   };
+
+  // Toast notifications based on URL parameters
+  useEffect(() => {
+    const error = searchParams.get('error');
+    const success = searchParams.get('success');
+    console.log(error, success);
+    
+    // Small delay to ensure everything is ready
+    const timer = setTimeout(() => {
+      if (error === 'not_for_you') {
+        toast.error('This invitation was sent to a different email address.');
+      } else if (error === 'already_accepted') {
+        console.log('already accepted');
+        toast.error('This invitation has already been accepted.');
+      } else if (error === 'invitation_not_found') {
+        toast.error('Invitation not found.');
+      } else if (success === 'invite_accepted') {
+        toast.success('Invitation accepted successfully!');
+      }
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, [searchParams]);
 
   // Loading state
   if (isLoading) {
@@ -481,60 +512,6 @@ export default function OrganizationsPage() {
             </CardContent>
           </Card>
 
-          {/* Quick Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium flex items-center">
-                  <Users className="mr-2 h-4 w-4" />
-                  Members
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{memberCount}</div>
-                <p className="text-xs text-muted-foreground">
-                  Total active members
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium flex items-center">
-                  <Mail className="mr-2 h-4 w-4" />
-                  Pending Invitations
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{pendingInvitations.length}</div>
-                <p className="text-xs text-muted-foreground">
-                  Awaiting acceptance
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium flex items-center">
-                  <Clock className="mr-2 h-4 w-4" />
-                  Created
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-lg font-semibold">
-                  {new Date(activeOrganization.createdAt).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                  })}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Organization age
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
           {/* Recent Members Preview */}
           {activeOrganization.members && activeOrganization.members.length > 0 && (
             <Card className="mb-6">
@@ -669,5 +646,31 @@ export default function OrganizationsPage() {
         </>
       )}
     </div>
+  );
+}
+
+// Main export with Suspense wrapper
+export default function OrganizationsPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto p-6 max-w-4xl">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Organization</h1>
+            <p className="text-muted-foreground">Loading...</p>
+          </div>
+        </div>
+        <Card className="animate-pulse">
+          <CardHeader className="pb-3">
+            <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+          </CardHeader>
+          <CardContent>
+            <div className="h-10 bg-gray-200 rounded w-full"></div>
+          </CardContent>
+        </Card>
+      </div>
+    }>
+      <OrganizationsPageContent />
+    </Suspense>
   );
 }

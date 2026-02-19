@@ -8,7 +8,7 @@ import { updateOrganizationSeats } from "@/lib/stripe/update-seats";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ invitationId: string }> }
+  { params }: { params: Promise<{ invitationId: string }> },
 ) {
   try {
     const { invitationId } = await params;
@@ -19,7 +19,7 @@ export async function GET(
 
     if (!session?.user) {
       return NextResponse.redirect(
-        new URL(`/login?invite=${invitationId}`, request.url)
+        new URL(`/login?invite=${invitationId}`, request.url),
       );
     }
 
@@ -30,27 +30,24 @@ export async function GET(
       .where(eq(invitation.id, invitationId));
 
     if (invitations.length === 0) {
-      return NextResponse.json(
-        { message: "Invitation not found" },
-        { status: 404 }
+      return NextResponse.redirect(
+        new URL("/org?error=invitation_not_found", request.url),
       );
     }
 
     const inv = invitations[0];
 
     if (inv.status === "accepted") {
-      return NextResponse.json(
-        { message: "Invitation already accepted" },
-        { status: 400 }
+      return NextResponse.redirect(
+        new URL("/org?error=already_accepted", request.url),
       );
     }
 
     const invitedEmail = inv.email;
 
     if (session.user.email.toLowerCase() !== invitedEmail.toLowerCase()) {
-      return NextResponse.json(
-        { message: "Invitation is not for you" },
-        { status: 401 }
+      return NextResponse.redirect(
+        new URL("/org?error=not_for_you", request.url),
       );
     }
 
@@ -61,9 +58,8 @@ export async function GET(
       .where(eq(organization.id, inv.organizationId));
 
     if (orgs.length === 0) {
-      return NextResponse.json(
-        { message: "Organization not found" },
-        { status: 404 }
+      return NextResponse.redirect(
+        new URL("/org?error=organization_not_found", request.url),
       );
     }
 
@@ -80,11 +76,16 @@ export async function GET(
     // Update subscription seats if organization has an active subscription
     try {
       const updateResult = await updateOrganizationSeats(currentOrg.id);
-      
+
       if (updateResult.success) {
-        console.log(`Updated seats for ${currentOrg.name}: ${updateResult.message}`);
+        console.log(
+          `Updated seats for ${currentOrg.name}: ${updateResult.message}`,
+        );
       } else {
-        console.warn(`Failed to update seats for ${currentOrg.name}:`, updateResult.message);
+        console.warn(
+          `Failed to update seats for ${currentOrg.name}:`,
+          updateResult.message,
+        );
       }
     } catch (error) {
       console.error("Error updating seats:", error);
@@ -92,29 +93,27 @@ export async function GET(
 
     // Redirect to organization page after successful acceptance
     return NextResponse.redirect(
-      new URL(`/org`, request.url)
+      new URL("/org?success=invite_accepted", request.url),
     );
-
   } catch (err: unknown) {
     console.error("Error accepting invitation:", err);
 
-    const isNextRedirect = 
-      err instanceof Error && 
-      err.message === "NEXT_REDIRECT";
-    
+    const isNextRedirect =
+      err instanceof Error && err.message === "NEXT_REDIRECT";
+
     if (isNextRedirect) {
       throw err;
     }
-    
+
     const message =
       err instanceof Error ? err.message : "Failed to accept invitation";
-   
+
     return NextResponse.json(
-      { 
+      {
         message: "Failed to accept invitation",
-        error: message
+        error: message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
