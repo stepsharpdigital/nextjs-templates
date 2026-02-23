@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js SaaS Boilerplate Collection
 
-## Getting Started
+A production-ready, reusable Next.js boilerplate repository designed for building modern SaaS applications.
 
-First, run the development server:
+This repository is structured into multiple branches. Each branch represents a fully working, independent implementation that builds incrementally on the previous one.
 
+The goal is to provide a clean, scalable foundation that can be reused across future SaaS projects - including web and mobile applications.
+
+## Tech Stack
+
+- **Next.js (App Router)**
+- **TypeScript**
+- **PostgreSQL**
+- **Drizzle ORM**
+- **better-auth**
+- **shadcn/ui**
+- **Stripe**
+- **Resend (Email)**
+- **Zod**
+- **React Hook Form**
+
+All branches use:
+- API routes (for mobile compatibility)
+- Clean folder structure
+- Reusable components
+- Proper database schema management
+- Production-oriented patterns
+
+
+
+## Repository Structure (Branches Overview)
+Each branch is fully functional and production-ready.
+
+
+### 1. `branch1-auth-core`
+
+Authentication core boilerplate.
+
+**Includes:**
+- Email + password signup
+- Email + password login
+- Forgot password
+- Reset password
+- Google OAuth
+- Protected routes
+- Basic dashboard
+- PostgreSQL + Drizzle setup
+- Resend email integration
+
+This branch serves as the foundational authentication template for future SaaS apps.
+
+
+### 2. `branch2-auth-stripe`
+
+Includes everything from **branch1-auth-core** plus:
+
+- Stripe Checkout subscriptions
+- Stripe customer storage
+- Subscription syncing via webhooks
+- Billing page
+- Stripe customer portal integration
+
+This branch is ideal for individual-user SaaS products.
+
+
+### 3. `branch3-auth-organizations`
+
+Includes everything from **branch1-auth-core** plus:
+
+- Organization creation
+- Member invitations
+- Role-based access control (OWNER, ADMIN, MEMBER)
+- Multi-organization support
+- Organization switching
+- Organization settings and member management
+
+This branch is designed for B2B or team-based SaaS products.
+
+
+### 4. `branch4-org-subs-per-member`
+
+Includes everything from **branch3-auth-organizations** plus:
+
+- Organization-based Stripe subscriptions
+- Per-member billing model
+- Automatic Stripe quantity syncing with member count
+- Organization billing portal
+- Subscription-based feature restriction
+
+This branch is built for scalable team SaaS platforms with usage-based billing.
+
+
+## Design Principles
+
+- Clean and modular architecture
+- Mobile-ready APIs
+- Strict TypeScript usage
+- Database-first design with Drizzle
+- Form validation using Zod
+- UI consistency with shadcn/ui
+- Easily extendable for future SaaS features
+
+## How to Use This Repository
+
+1. Clone the repository.
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/talhasultan-dev/nextjs-templates.git
 ```
+2. Switch to the branch that matches your use case:
+```bash
+   git checkout branch-name
+```
+3. Follow the README inside that branch for detailed setup instructions.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Each branch contains its own setup guide and environment configuration instructions.
