@@ -285,6 +285,6 @@ If any of the above fails, verify your environment variables, database migration
 
 Made by [Step Sharp Digital](https://github.com/stepsharpdigital)
 
-**Star this repo if it helped you.**
+### ⭐ Star this repo if it helped you.
 
 </div>
