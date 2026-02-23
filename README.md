@@ -1,281 +1,161 @@
-# Branch 1 - Authentication Core (branch1-auth-core)
+<div align="center">
 
-This branch provides a complete authentication foundation for SaaS applications using Next.js (App Router), better-auth, PostgreSQL (neon), and Drizzle ORM.
+# Next.js SaaS Boilerplate Collection
 
-It is designed to be production-ready and reusable across future projects.
+### A production-ready, reusable Next.js boilerplate for building modern SaaS applications.
 
+Multi-branch architecture — auth, payments, organizations, and per-member billing — fully wired.<br/>
+**Clone it. Switch branches. Ship it.**
 
-## Features
+![Next.js](https://img.shields.io/badge/Next.js-App_Router-black?style=flat-square&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Drizzle](https://img.shields.io/badge/Drizzle-ORM-C5F74F?style=flat-square&logo=drizzle&logoColor=black)
+![Stripe](https://img.shields.io/badge/Stripe-Payments-635BFF?style=flat-square&logo=stripe&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)
 
-- Email + password signup
-- Email + password login
-- Forgot password (email reset link)
-- Reset password (token-based)
-- Google OAuth login
-- Protected routes
-- Example dashboard (/dashboard)
-- Mobile-ready API endpoints
-- PostgreSQL + Drizzle ORM integration
+</div>
+
+---
+
+## What You Get
+
+> One repo. Four branches. Every SaaS pattern covered.
+
+| Feature | What's Inside |
+|---|---|
+| **Auth** | Better Auth — email/password, Google OAuth, forgot/reset password, protected routes |
+| **Payments** | Stripe — subscriptions, webhooks, customer portal, per-member billing |
+| **Database** | Drizzle ORM + PostgreSQL — clean schema management, production-oriented |
+| **Email** | Resend — transactional emails for auth flows |
+| **Organizations** | Multi-org support, member invitations, role-based access control |
+| **UI** | Shadcn/ui — accessible, consistent component system |
+| **Validation** | Zod + React Hook Form — strict, type-safe form handling |
+| **API** | API routes throughout — designed for mobile compatibility |
+
+---
+
+## How to Use This Repository
+
+1. Clone the repository:
+```bash
+git clone https://github.com/stepsharpdigital/nextjs-templates.git
+```
+
+2. Switch to the branch that matches your use case:
+```bash
+git checkout branch-name
+```
+
+3. Follow the README inside that branch for detailed setup instructions.
+
+Each branch contains its own setup guide and environment configuration instructions.
+
+---
+
+## Repository Structure
+
+Each branch is **fully functional and production-ready**, building incrementally on the previous one.
+
+All branches include:
+- API routes (for mobile compatibility)
+- Clean folder structure
+- Reusable components
+- Proper database schema management
+- Production-oriented patterns
+
+### `branch1-auth-core` - Authentication Foundation
+
+The foundational authentication template for any SaaS app.
+
+- Email + password signup & login
+- Forgot password & reset password
+- Google OAuth
+- Protected routes & basic dashboard
+- PostgreSQL + Drizzle setup
 - Resend email integration
-- Form validation with Zod
-- Forms built using React Hook Form
-- UI built with shadcn/ui
 
+---
+
+### `branch2-auth-stripe` - Payments
+
+Everything from **branch1-auth-core**, plus:
+
+- Stripe Checkout subscriptions
+- Stripe customer storage
+- Subscription syncing via webhooks
+- Billing page & Stripe customer portal
+
+*Ideal for individual-user SaaS products.*
+
+---
+
+### `branch3-auth-organizations` - Teams & Roles
+
+Everything from **branch1-auth-core**, plus:
+
+- Organization creation & switching
+- Member invitations
+- Role-based access control (OWNER, ADMIN, MEMBER)
+- Multi-organization support
+- Organization settings & member management
+
+*Designed for B2B or team-based SaaS products.*
+
+---
+
+### `branch4-org-subs-per-member` - Scalable Billing
+
+Everything from **branch3-auth-organizations**, plus:
+
+- Organization-based Stripe subscriptions
+- Per-member billing model
+- Automatic Stripe quantity syncing with member count
+- Organization billing portal
+- Subscription-based feature restriction
+
+*Built for scalable team SaaS platforms with usage-based billing.*
+
+---
 
 ## Tech Stack
 
-- Next.js (App Router)
-- TypeScript
-- PostgreSQL
-- Drizzle ORM
-- better-auth
-- shadcn/ui
-- Resend (email delivery)
-- Zod
-- React Hook Form
+| Tech | Purpose |
+|---|---|
+| [Next.js](https://nextjs.org) | App Router, Server Components, API Routes |
+| [TypeScript](https://www.typescriptlang.org) | Strict mode, end-to-end type safety |
+| [PostgreSQL](https://www.postgresql.org) | Primary database |
+| [Drizzle ORM](https://orm.drizzle.team) | Type-safe queries, migrations |
+| [Better Auth](https://better-auth.com) | OAuth, sessions, protected routes |
+| [Stripe](https://stripe.com) | Payments, subscriptions, webhooks |
+| [Resend](https://resend.com) | Transactional email |
+| [Shadcn/ui](https://ui.shadcn.com) | Accessible, customizable components |
+| [Zod](https://zod.dev) | Schema validation |
+| [React Hook Form](https://react-hook-form.com) | Performant, type-safe forms |
 
+---
 
-## Prerequisites
+## Design Principles
 
-Before running this project, ensure you have:
+- Clean and modular architecture
+- Mobile-ready APIs throughout
+- Strict TypeScript usage
+- Database-first design with Drizzle
+- Form validation using Zod + React Hook Form
+- UI consistency with Shadcn/ui
+- Easily extendable for future SaaS features
 
-- Node.js (v18+ recommended)
-- PostgreSQL database (local or hosted)
-- A Resend account (for email)
-- A Google OAuth application (for Google login)
+---
 
+## License
 
-## 1. Clone the Repository
+MIT - free to use, modify, and ship.
 
-```bash
-git clone https://github.com/talhasultan-dev/nextjs-templates.git
-```
+---
 
-Move to the cloned directory:
-```bash
-cd nextjs-templates
-```
+<div align="center">
 
-Switch to the branch-1-auth-core:
-```bash
-git checkout branch1-auth-core
-```
+Made by [Step Sharp Digital](https://github.com/stepsharpdigital)
 
-## 2. Install Dependencies
-```bash
-npm install
-```
+### ⭐ Star this repo if it helped you. 
 
-### If starting from scratch or verifying packages, ensure the following are installed:
-```bash
-npm install better-auth
-npm install resend
-npm install zod react-hook-form
-npm install @hookform/resolvers
-```
-### Drizzle with Neon Postgres
-```bash
-npm i drizzle-orm
-npm i -D drizzle-kit
-```
-- You should also install the Neon serverless driver.
-```bash
-npm i @neondatabase/serverless
-```
-- You should have installed the dotenv package for managing environment variables.
-```bash
-npm i dotenv
-```
-
-## 3. Environment Variables
-
-### A .env.example file is provided.
-
-- Create your .env file
-- Fill in all required variables.
-Required Environment Variables
-
-ENV structure (refer to .env.example):
-```bash
-# App
-BETTER_AUTH_SECRET=
-BETTER_AUTH_URL=
-
-# Database
-DATABASE_URL=
-
-# Base URL of the app
-BASE_URL=
-
-# Google OAuth
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-
-# Resend
-RESEND_API_KEY=
-RESEND_EMAIL=
-```
-### Important Notes
-
-- ``DATABASE_URL`` must point to your PostgreSQL database.
-- Google OAuth callback URL must match:
-```bash
-   http://localhost:3000/api/auth/callback/google
-```
-- ``AUTH_SECRET`` should be a secure random string.
-
-- ``RESEND_EMAIL`` must be verified inside Resend.
-
- The application will not run correctly unless all required variables are set.
-
-
-## 4. Setup PostgreSQL Database
-
-Create a PostgreSQL database and copy your connection string and:
-
-- Update ``DATABASE_URL`` accordingly
-
-## 5. Drizzle Configuration
-
-Ensure the Drizzle config file exists (usually drizzle.config.ts) and references:
-
-- PostgreSQL driver
-
-- Correct schema path
-
-- Correct database URL
-
-## 6. Generate Database Migrations
-
-### After configuring the database:
-To generate the schema required by Better Auth, run the following command:
-```bash
-npx @better-auth/cli@latest generate
-```
-- This generates auth-schema.ts where the schema required by better-auth is present you can copy and paste it into the schema.ts file we already created
-
-## 7. Run Migrations
-```bash
-npx drizzle-kit push
-```
-
-or if using migrate:
-```bash
-npx drizzle-kit migrate
-```
-
-### This will create:
-
-- users table
- 
-- better-auth required tables
-
-*** The app will fail if migrations are not applied.
-
-## 8. Setup Google OAuth
-
- 1. Go to Google Cloud Console.
-
- 2. Create OAuth credentials.
-
- 3. Add authorized redirect URI:
-```bash
-http://localhost:3000/api/auth/callback/google
-```
-
-   Copy:
-```bash
-GOOGLE_CLIENT_ID
-
-GOOGLE_CLIENT_SECRET
-```
-#### Paste into .env.
-
-## 9. Setup Resend (Email Provider)
-
-1. Create a Resend account.
-
-2. Verify a sending domain or email.
-
-3. Generate an API key.
-
-#### Add to .env:
-```bash
-RESEND_API_KEY=your_key 
-
-RESEND_EMAIL=your_verified_email 
-```
-- incase you dont have any verified email you can use 
-``onboarding@resend.dev`` officially provided email that allows you to send emails to yourself
-
-## 10. shadcn/ui Setup (If Needed)
-
-If initializing manually:
-```bash
-npx shadcn@latest init
-```
-Ensure required components are installed (button, form, input, card, etc.).
-
-## 11. Run the Development Server
-```bash
-npm run dev
-```
-
-Application runs at:
-
-http://localhost:3000/
-
-### Application Routes
- #### Public
-
-- /signup
-
-- /login
-
-- /forgot-password
-
-- /reset-password?token=...
-
-#### Protected
-
-- /dashboard
-
-Unauthenticated users are automatically redirected to /login.
-
-## Production Deployment Notes
-
-### Before deploying:
-
-- Update ``BASE_URL``
-
-- Update ``BETTER_AUTH_URL``
-
-- Update Google OAuth callback to production URL
-
-- Ensure PostgreSQL is accessible
-
-- Ensure Resend domain is verified if not use ``onboarding@resend.dev``
-- Set strong ``BETTER_AUTH_SECRET``
-
-### Expected Working Flow
-
-After correct setup:
-
-- User can sign up
-
-- User can log in
-
-- Google login works
-
-- Forgot password sends email
-
-- Reset password updates credentials
-
-- Protected routes redirect properly
-
-### If any of the above fails, verify:
-
-- Environment variables
-- Database migrations
-- OAuth configuration
-- Email provider setup
+</div>
