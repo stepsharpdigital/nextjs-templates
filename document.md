@@ -38,7 +38,7 @@ Multi-branch architecture — auth, payments, organizations, and per-member bill
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/talhasultan-dev/nextjs-templates.git
+git clone https://github.com/stepsharpdigital/nextjs-templates.git
 ```
 
 2. Switch to the branch that matches your use case:
