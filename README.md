@@ -35,9 +35,15 @@ Next.js App Router · Better Auth · PostgreSQL · Drizzle ORM · Resend<br/>
 
 ---
 
-## Prerequisites
+## Design Principles
 
-Before running this project, ensure you have:
+- Clean and modular architecture
+- Mobile-ready APIs throughout
+- Strict TypeScript usage
+- Database-first design with Drizzle
+- Form validation using Zod + React Hook Form
+- UI consistency with Shadcn/ui
+- Easily extendable for future SaaS features
 
 - Node.js (v18+ recommended)
 - PostgreSQL database (local or hosted — [Neon](https://neon.tech) free tier works great)
