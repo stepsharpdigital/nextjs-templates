@@ -85,7 +85,7 @@ npm install @better-auth/stripe
 Then install the Stripe SDK on your server:
 
 ```bash
-npm install stripe
+npm install stripe@^20.0.0
 ```
 
 **Drizzle with Neon Postgres:**
