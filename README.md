@@ -16,6 +16,16 @@ Multi-branch architecture — auth, payments, organizations, and per-member bill
 </div>
 
 ---
+<p align="center">
+  <img src="public/screenshot-1.png" alt="Analysis result example" width="480"><br>
+  
+</p>
+<p align="center">
+  <img src="public/screenshot-2.png" alt="Analysis result example" width="480"><br>
+  
+</p>
+
+---
 
 ## What You Get
 
